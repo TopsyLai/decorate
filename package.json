@@ -14,9 +14,12 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
+    "event-source-polyfill": "^1.0.4",
     "js-md5": "^0.7.3",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
+    "url-search-params-polyfill": "^5.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vux": "^2.9.2"

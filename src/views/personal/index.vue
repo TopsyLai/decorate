@@ -1,14 +1,16 @@
 <template>
   <div class="personal">
       <div class="head">
-        <img :src="'/api'+queryUserInfo.imgSrc" alt="头像">
+        <img @click="portraitShow=true" :src="'/api'+queryUserInfo.imgSrc" alt="头像">
         <div class="info">
           <p>{{queryUserInfo.userName}}</p>
         </div>
       </div>
-      
-		<group>
-      <x-switch  :title="icon+'接活'"></x-switch>
+    
+    <actionsheet v-model="portraitShow" :menus="portrait" show-cancel></actionsheet>
+		
+    <group>
+      <x-switch  :title="icon+'接活'"><span></span><span></span></x-switch>
       <cell title="工人入驻/修改"  is-link value-align="left">
         <img slot="icon" width="20" style="display:block;margin-right:5px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=">
       </cell>
@@ -31,7 +33,7 @@
   </div>
 </template>
 <script>
-import { Tabbar, TabbarItem, Group, Cell, XSwitch  } from "vux";
+import { Tabbar, TabbarItem, Group, Cell, XSwitch, Actionsheet,TransferDom  } from "vux";
 
 export default {
   components: {
@@ -39,13 +41,22 @@ export default {
     TabbarItem,
     Group,
     XSwitch,
-    Cell
+    Cell,
+    Actionsheet
+  },
+  directives: {
+    TransferDom
   },
   data() {
     return {
       icon: '<img slot="icon" width="20" style="display:inline-block;margin: 0 5px 0 -25px;vertical-align: middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=">',
       tabIndex: 0,
-      queryUserInfo: {}
+      queryUserInfo: {},
+      portraitShow: false,
+      portrait: {
+        menu1: '拍照',
+        menu2: '从相册中选择'
+      }
     };
   },
   created() {
@@ -57,6 +68,9 @@ export default {
   computed: {
     changeTabIndex(index) {
       this.tabIndex = index;
+    },
+    portraitClick(key){
+      console.log(key)
     }
   }
 };

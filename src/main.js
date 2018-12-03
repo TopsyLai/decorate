@@ -6,8 +6,17 @@ import App from './App'
 import router from './router'
 import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
-import { post, fetch } from './components/http'
-import  { ToastPlugin, LoadingPlugin } from 'vux'
+import 'babel-polyfill'
+import 'event-source-polyfill'
+import 'url-search-params-polyfill'
+import {
+  post,
+  fetch
+} from './components/http'
+import {
+  ToastPlugin,
+  LoadingPlugin
+} from 'vux'
 
 Vue.use(ToastPlugin)
 Vue.use(LoadingPlugin)
@@ -21,19 +30,37 @@ Vue.prototype.$post = post;
 Vue.prototype.$fetch = fetch;
 window.MF = Vue;
 
-window.router=router
+window.router = router
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  components: {
-    App
-  },
-  watch: {
-   ' $route': function() {
-      debugger
-    }
-  },
-  template: '<App/>'
-})
+window.os = window.os || {};
+var plus = navigator.userAgent.match(/Html5Plus/i); //TODO 5\+Browser?
+if (plus) {
+  window.os.plus = true;
+  if (navigator.userAgent.match(/StreamApp/i)) { //TODO 最好有流应用自己的标识
+    window.os.stream = true;
+  }
+}
+if(window.os.plus){
+  document.addEventListener('plusready',function () {
+    /* eslint-disable no-new */
+    new Vue({
+      el: '#app',
+      router,
+      components: {
+        App
+      },
+      template: '<App/>'
+    })
+  },false);
+}else{
+  /* eslint-disable no-new */
+  new Vue({
+    el: '#app',
+    router,
+    components: {
+      App
+    },
+    template: '<App/>'
+  })
+}
+
