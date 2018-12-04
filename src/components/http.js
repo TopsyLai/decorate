@@ -22,7 +22,7 @@ axios.defaults.baseURL = 'http://39.104.53.137:80/api';
 axios.interceptors.request.use(
   config => {
     // const token = getCookie('名称');注意使用的时候需要引入cookie方法，推荐js-cookie
-    config.data = JSON.stringify(config.data);
+    // config.data = JSON.stringify(config.data); // FormData 接受不到数据，先注释
     //发起请求时，取消掉当前正在进行的相同请求
     if (promiseArr[config.url]) {
       promiseArr[config.url]('操作取消')
@@ -149,11 +149,24 @@ export function fetch(url, params = {}) {
 
 export function post(url, data = {}) {
   return new Promise((resolve, reject) => {
-    data.tokenId = localStorage.getItem('tokenId') || '';
+    url += '?tokenId=' +  localStorage.getItem('tokenId') || '';
+    let config = {
+      headers: {
+          'Content-Type': 'multipart/form-data'
+      }
+  }
+    axios.post(url, data,config).then( res => {
+        console.log(res)
+    }).catch( res => {
+        console.log(res)
+    })
+    return false;
     axios({
         method: 'post',
         url,
         params: data,
+        data: data,
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
         cancelToken: new CancelToken(c => {
           cancel = c
         })

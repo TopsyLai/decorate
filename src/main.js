@@ -15,11 +15,13 @@ import {
 } from './components/http'
 import {
   ToastPlugin,
-  LoadingPlugin
+  LoadingPlugin,
+  ConfirmPlugin 
 } from 'vux'
 
 Vue.use(ToastPlugin)
 Vue.use(LoadingPlugin)
+Vue.use(ConfirmPlugin)
 Vue.use(VueRouter)
 
 FastClick.attach(document.body)
