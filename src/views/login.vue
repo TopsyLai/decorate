@@ -52,7 +52,7 @@ export default {
         this.$vux.toast.text("请填写正确的信息");
         return;
       }
-      var params = new URLSearchParams();
+      var params = new FormData();
       params.append("userName", this.userName);
       params.append("password", this.md5(this.password));
       params.append("deviceId", 0);
