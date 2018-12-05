@@ -149,18 +149,12 @@ export function fetch(url, params = {}) {
 
 export function post(url, data = {}) {
   return new Promise((resolve, reject) => {
-    url += '?tokenId=' +  localStorage.getItem('tokenId') || '';
-    let config = {
-      headers: {
-          'Content-Type': 'multipart/form-data'
-      }
-  }
-    axios.post(url, data,config).then( res => {
-        console.log(res)
-    }).catch( res => {
-        console.log(res)
-    })
-    return false;
+      url += '?tokenId=' +  localStorage.getItem('tokenId') || '';
+      let config = {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }
     axios({
         method: 'post',
         url,
