@@ -4,6 +4,7 @@ import Tab from '@/components/tabbar'
 import personalIndex from '@/views/personal/index'
 import regist from '@/views/regist'
 import login from '@/views/login'
+import stationed from '@/views/personal/stationed'
 
 Vue.use(Router)
 
@@ -38,6 +39,10 @@ export default new Router({
     path: '/login',
     name: 'login',
     component: login
+  },{
+    path: '/stationed',
+    name: 'stationed',
+    component: stationed
   }
 ]
 })
