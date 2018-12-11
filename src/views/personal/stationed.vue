@@ -8,8 +8,22 @@
       </flexbox-item>
       <flexbox-item>年</flexbox-item>
     </flexbox>
-    <popup-radio multiple title="角色" :options="roleList" v-model="role" placeholder="请选择您的角色定位"></popup-radio>
+    <cell title="角色" value="请选择您的角色定位"></cell>
+    <cell-form-preview :list="role"></cell-form-preview>
+    <!-- <popup-radio multiple title="角色" :options="roleList" v-model="role" placeholder="请选择您的角色定位"></popup-radio> -->
     </group>
+
+    <div v-transfer-dom>
+      <popup v-model="show13" position="bottom" max-height="50%">
+        <group>
+          <cell v-for="i in 20" :key="i" :title="i"></cell>
+        </group>
+        <div style="padding: 15px;">
+          <x-button @click.native="show13 = false" plain type="primary"> Close Me </x-button>
+        </div>
+      </popup>
+    </div>
+
   </div>
 </template>
 <script>
@@ -24,7 +38,9 @@ import {
   Confirm,
   PopupPicker,
   Flexbox,
-  FlexboxItem
+  FlexboxItem,
+  Popup,
+  CellFormPreview 
 } from "vux";
 
 export default {
@@ -38,7 +54,9 @@ export default {
     Confirm,
     PopupPicker,
     Flexbox,
-    FlexboxItem
+    FlexboxItem,
+    Popup,
+    CellFormPreview 
   },
   directives: {
     TransferDom
@@ -57,6 +75,8 @@ export default {
       expectAmount: '',
       unit: '',
       shiningPoint: '',
+      UserTypeList: {},
+      UserRoleList: [],
       regionId: '',
       portrait: {
         camera: '<label = for="file">拍照</label>',
@@ -66,9 +86,13 @@ export default {
   },
   created() {
     let self = this;
-    this.$fetch("account/queryUserInfo.htm").then(response => {
-      self.userInfo = response.data;
+    this.$fetch("common/getUserTypeList.htm").then(response => {
+      self.UserTypeList = response.data;
     });
+    this.$fetch("common/getUserRoleList.htm").then(response => {
+      self.roleList = response.data;
+    });
+    
   },
   methods: {
     changeTabIndex(index) {
