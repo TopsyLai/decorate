@@ -1,6 +1,6 @@
 <template>
   <div class="stationed">
-    <group>
+    <group label-align="justify" label-width="5.5em" label-margin-right="2em">
       <flexbox>
       <flexbox-item :span="11/12" >
         <popup-picker title="已工作年限" :data="workAgeList" v-model="workAge" @on-change="changeTabIndex" placeholder="请选择年份">
@@ -31,7 +31,12 @@
     </flexbox>
     <flexbox>
       <flexbox-item>
-        <popup-picker :data="addressData" title="地址" @on-shadow-change="changeAddressData"  v-model="regionId"></popup-picker>
+        <popup-picker :data="addressData" title="地址" @on-shadow-change="changeAddressData"  v-model="regionId" :columns="3" :show-name='true' ></popup-picker>
+      </flexbox-item>
+    </flexbox>
+    <flexbox>
+      <flexbox-item>
+
       </flexbox-item>
     </flexbox>
     <!-- <cell-form-preview :list="role"></cell-form-preview> -->
@@ -111,7 +116,7 @@ export default {
       addressData: [],
       UserTypeList: {},
       UserRoleList: [],
-      regionId: ['','',''],
+      regionId: [],
       portrait: {
         camera: '<label = for="file">拍照</label>',
         avatar: '<label = for="file">从相册中选择</label>'
@@ -140,17 +145,20 @@ export default {
     });
       this.$fetch("common/queryRegionView.htm").then(response => {
         for (let k =0 ;k<response.data.length;k++) {
-          response.data[k].value = response.data[k].id
+          response.data[k].value = response.data[k].id+''
         }
         self.addressData = [response.data];
+        // self.$set(self.addressData,0,response.data);
         for (let k =0 ;k<response.data[0].citys.length;k++) {
-          response.data[0].citys[k].value = response.data[0].citys[k].id
+          response.data[0].citys[k].value = response.data[0].citys[k].id+''
         }
         self.addressData[1] = response.data[0].citys;
+        //self.$set(self.addressData,1,response.data[0].citys);
         for (let k =0 ;k<response.data[0].citys[0].countys.length;k++) {
-          response.data[0].citys[0].countys[k].value = response.data[0].citys[0].countys[k].id
+          response.data[0].citys[0].countys[k].value = response.data[0].citys[0].countys[k].id+''
         }
         self.addressData[2] = response.data[0].citys[0].countys;
+        //self.$set(self.addressData,2,response.data[0].citys[0].countys);
         // self.queryCityListByProvince(response.data[0])
       });
   },
@@ -159,24 +167,32 @@ export default {
       this.tabIndex = index;
     },
     queryCountyListByCity(city,county){
-      for (let k =0 ;k<self.addressData[city].citys[county].countys.length;k++) {
-        self.addressData[0][city].citys[county].countys[k].value = self.addressData[0][city].citys[county].countys[k].id
+      let self = this;
+      for (let k =0 ;k<self.addressData[0][city].citys[county].countys.length;k++) {
+        self.addressData[0][city].citys[county].countys[k].value = self.addressData[0][city].citys[county].countys[k].id+''
       }
-      self.addressData[2] = self.addressData[0][city].citys[county].countys;
+      self.$set(self.regionId,2,self.addressData[0][city].citys[county].countys[0].value);
+      self.$set(self.addressData,2,self.addressData[0][city].citys[county].countys);
     },
     changeAddressData(item,name,xxx){
       let self = this;
+      self.$set(self,'regionId',item);
       for (let k =0 ;k<self.addressData[0].length;k++) {
         if(self.addressData[0][k].id==item[0]){
           if(self.addressData[1][0].id==self.addressData[0][k].citys[0].id){
-            for (let j =0 ;k<self.addressData[1].citys.length;k++) {
-              debugger
-              if(self.addressData[1].citys[k].id==item[1]){
-                //self.queryCountyListByCity(item[1],0)
+            for (let j =0 ;j<self.addressData[1].length;j++) {
+              if(self.addressData[1][j].id==item[1]){
+                if(self.addressData[2][0].id==self.addressData[0][k].citys[j].countys[0].id){
+                  return false;
+                }else{
+                  self.queryCountyListByCity(k,j)
+                }
+                return
               }
             }
           }else{
             self.queryCityListByProvince(k,0)
+            return
           }
         }
       }
@@ -187,8 +203,9 @@ export default {
         return false;
       }else{
         for (let k =0 ;k<self.addressData[0][city].citys.length;k++) {
-          self.addressData[0][city].citys[k].value = self.addressData[0][city].citys[k].id
+          self.addressData[0][city].citys[k].value = self.addressData[0][city].citys[k].id+''
         }
+        self.$set(self.regionId,1,self.addressData[0][city].citys[0].value);
         self.$set(self.addressData,1,self.addressData[0][city].citys);
       }
       if(county==0){
